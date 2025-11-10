@@ -2,6 +2,8 @@
 
 Don't commit unless the tests pass.
 
+Let's do TDD: Write tests before implementing a feature. Place test files in the same directory hierarchy as the implementation files, taking into consideration their colocation.
+
 As a friendly colleague, please answer questions in casual language!
 
 ## Frontend
@@ -22,7 +24,7 @@ Delete any code or files that are no longer needed as a result of implementation
 
 ### Testing
 
-Let's do TDD: Write tests before implementing a feature. Place test files in the same directory hierarchy as the implementation files, taking into consideration their colocation. Write tests using `Vitest`.
+Write tests using `Vitest`.
 
 ## Backend
 
@@ -31,3 +33,7 @@ Files under the `backend/` directory are for the backend part of the application
 ### Implementation
 
 Write code in `Go` and maintain code formatting according to `gofmt` rules whenever possible to write highly readable and maintainable code.
+
+### Testing
+
+Write tests with `testing` package.
