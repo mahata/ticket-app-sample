@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -11,6 +12,9 @@ function App() {
           count is {count}
         </button>
       </div>
+      <nav>
+        <Link to="/my-path">Go to My Path</Link>
+      </nav>
     </>
   )
 }
