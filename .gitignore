@@ -24,4 +24,7 @@ dist-ssr
 *.sw?
 
 # App
+*.env
 .env
+.env.local
+.env.*.local
