@@ -7,4 +7,4 @@ test_backend:
 	cd backend && go test ./... -v
 
 test_frontend:
-	cd frontend && npm test
+	cd frontend && pnpm test

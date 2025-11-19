@@ -1,20 +1,5 @@
-import { createContext, useState, useEffect, type ReactNode } from 'react'
-
-interface User {
-  name: string
-  email: string
-  picture: string
-}
-
-interface AuthContextType {
-  user: User | null
-  token: string | null
-  login: (credential: string) => Promise<void>
-  logout: () => void
-  isLoading: boolean
-}
-
-export const AuthContext = createContext<AuthContextType | undefined>(undefined)
+import { useState, useEffect, type ReactNode } from 'react'
+import { AuthContext, type User } from './AuthContext'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'
 
@@ -26,11 +11,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const storedToken = localStorage.getItem('token')
     const storedUser = localStorage.getItem('user')
-    
+
     if (storedToken && storedUser) {
       setToken(storedToken)
       setUser(JSON.parse(storedUser))
-      
+
       fetch(`${API_BASE_URL}/api/me`, {
         headers: {
           Authorization: `Bearer ${storedToken}`,
@@ -87,4 +72,3 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     </AuthContext.Provider>
   )
 }
-

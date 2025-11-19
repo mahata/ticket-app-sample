@@ -2,7 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { BrowserRouter } from 'react-router-dom'
 import MyPath from '@/MyPath'
-import { AuthProvider } from '@/AuthContext'
+import { AuthProvider } from '@/contexts/AuthProvider'
 
 const mockUser = {
   name: 'Test User',
