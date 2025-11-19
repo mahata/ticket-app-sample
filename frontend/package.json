@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest run --coverage --retry 1"
   },
   "dependencies": {
     "react": "^19.1.1",
@@ -24,6 +24,7 @@
     "@types/react": "^19.1.16",
     "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-react-swc": "^4.1.0",
+    "@vitest/coverage-v8": "4.0.8",
     "@vitest/ui": "^4.0.8",
     "eslint": "^9.36.0",
     "eslint-plugin-react-hooks": "^5.2.0",
