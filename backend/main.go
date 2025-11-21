@@ -104,7 +104,11 @@ func handleGetCurrentUser(c *gin.Context) {
 }
 
 func handleMyPathData(c *gin.Context) {
-	claims, _ := c.Get("user")
+	claims, exists := c.Get("user")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not found"})
+		return
+	}
 	userClaims := claims.(*Claims)
 
 	c.JSON(http.StatusOK, gin.H{
