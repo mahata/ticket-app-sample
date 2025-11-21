@@ -3,11 +3,34 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
+	"strings"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
+
+func allowedOrigins() []string {
+	value := os.Getenv("ALLOW_ORIGINS")
+	defaultOrigins := []string{"http://localhost:5173"}
+	if value == "" {
+		return defaultOrigins
+	}
+
+	segments := strings.Split(value, ",")
+	origins := make([]string, 0, len(segments))
+	for _, segment := range segments {
+		origin := strings.TrimSpace(segment)
+		if origin != "" {
+			origins = append(origins, origin)
+		}
+	}
+	if len(origins) == 0 {
+		return defaultOrigins
+	}
+	return origins
+}
 
 func main() {
 	if err := godotenv.Load(); err != nil {
@@ -17,7 +40,7 @@ func main() {
 	router := gin.Default()
 
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173"},
+		AllowOrigins:     allowedOrigins(),
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},
