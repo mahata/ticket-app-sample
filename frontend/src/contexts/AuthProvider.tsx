@@ -1,7 +1,6 @@
 import { useState, useEffect, type ReactNode } from 'react'
 import { AuthContext, type User } from '@/contexts/AuthContext'
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'
+import { API_BASE_URL } from '@/config'
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null)
