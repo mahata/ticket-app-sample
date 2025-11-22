@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 	"net/http/httptest"
+	"reflect"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -14,6 +15,33 @@ func setupRouter() *gin.Engine {
 		c.String(http.StatusOK, "OK")
 	})
 	return router
+}
+
+func TestAllowedOriginsReturnsDefaultWhenUnset(t *testing.T) {
+	t.Setenv("ALLOW_ORIGINS", "")
+	got := allowedOrigins()
+	want := []string{"http://localhost:5173"}
+	if !reflect.DeepEqual(got, want) {
+		t.Fatalf("expected %v, got %v", want, got)
+	}
+}
+
+func TestAllowedOriginsParsesCommaSeparatedValues(t *testing.T) {
+	t.Setenv("ALLOW_ORIGINS", " http://example.com ,https://foo.com ")
+	got := allowedOrigins()
+	want := []string{"http://example.com", "https://foo.com"}
+	if !reflect.DeepEqual(got, want) {
+		t.Fatalf("expected %v, got %v", want, got)
+	}
+}
+
+func TestAllowedOriginsFallsBackWhenValuesEmpty(t *testing.T) {
+	t.Setenv("ALLOW_ORIGINS", " ,  , ")
+	got := allowedOrigins()
+	want := []string{"http://localhost:5173"}
+	if !reflect.DeepEqual(got, want) {
+		t.Fatalf("expected %v, got %v", want, got)
+	}
 }
 
 func TestHealthEndpoint(t *testing.T) {

@@ -23,5 +23,11 @@ dist-ssr
 *.sln
 *.sw?
 
+# Coverage
+frontend/coverage/*
+
 # App
+*.env
 .env
+.env.local
+.env.*.local
