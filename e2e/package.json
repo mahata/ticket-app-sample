@@ -1,0 +1,12 @@
+{
+  "name": "e2e",
+  "version": "1.0.0",
+  "description": "e2e tests for the project",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "packageManager": "pnpm@10.15.1",
+  "devDependencies": {
+    "@playwright/test": "^1.56.1"
+  }
+}
