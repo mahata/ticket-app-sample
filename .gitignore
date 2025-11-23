@@ -31,3 +31,7 @@ frontend/coverage/*
 .env
 .env.local
 .env.*.local
+
+# E2E
+e2e/test-results
+e2e/playwright-report

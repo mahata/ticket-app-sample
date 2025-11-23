@@ -1,0 +1,97 @@
+name: E2E Tests
+
+on:
+  push:
+    branches: ["*"]
+  pull_request:
+    branches: ["*"]
+
+jobs:
+  e2e-test:
+    name: Playwright E2E Tests
+    runs-on: ubuntu-latest
+
+    env:
+      PLAYWRIGHT_BASE_URL: http://127.0.0.1:5173
+      CI: true
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+          cache-dependency-path: frontend/pnpm-lock.yaml
+
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: pnpm install --frozen-lockfile
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.23.4"
+
+      - name: Install backend dependencies
+        working-directory: ./backend
+        run: go mod download
+
+      - name: Start backend server
+        working-directory: ./backend
+        run: |
+          go run main.go &
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:8080/health > /dev/null; then
+              echo "Backend is up";
+              exit 0;
+            fi
+            echo "Waiting for backend...";
+            sleep 1;
+          done
+          echo "Backend did not start in time";
+          exit 1
+
+      - name: Start frontend dev server
+        working-directory: ./frontend
+        run: |
+          pnpm dev -- --host 0.0.0.0 --port 5173 &
+          for i in {1..60}; do
+            if curl -fsS http://127.0.0.1:5173/ > /dev/null; then
+              echo "Frontend is up";
+              exit 0;
+            fi
+            echo "Waiting for frontend...";
+            sleep 1;
+          done
+          echo "Frontend did not start in time";
+          exit 1
+
+      - name: Install e2e dependencies
+        working-directory: ./e2e
+        run: |
+          if [ -f package.json ]; then
+            pnpm install --frozen-lockfile || pnpm install
+          else
+            echo "No package.json in e2e/, skipping install";
+          fi
+
+      - name: Run Playwright tests
+        working-directory: ./e2e
+        run: pnpm test
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            e2e/playwright-report
+            e2e/test-results
+          if-no-files-found: ignore
