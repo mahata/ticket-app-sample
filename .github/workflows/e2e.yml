@@ -65,7 +65,7 @@ jobs:
           for i in {1..60}; do
             if curl -fsS http://127.0.0.1:5173/ > /dev/null; then
               echo "Frontend is up";
-              exit 0;
+              break;
             fi
             echo "Waiting for frontend...";
             sleep 1;
