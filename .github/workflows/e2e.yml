@@ -76,11 +76,7 @@ jobs:
       - name: Install e2e dependencies
         working-directory: ./e2e
         run: |
-          if [ -f package.json ]; then
-            pnpm install --frozen-lockfile || pnpm install
-          else
-            echo "No package.json in e2e/, skipping install";
-          fi
+          pnpm install --frozen-lockfile
 
       - name: Run Playwright tests
         working-directory: ./e2e
