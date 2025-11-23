@@ -47,31 +47,39 @@ jobs:
         working-directory: ./backend
         run: |
           go run main.go &
+          BACKEND_STARTED=false
           for i in {1..30}; do
             if curl -fsS http://127.0.0.1:8080/health > /dev/null; then
               echo "Backend is up";
+              BACKEND_STARTED=true
               break;
             fi
             echo "Waiting for backend...";
             sleep 1;
           done
-          echo "Backend did not start in time";
-          exit 1
+          if [ "$BACKEND_STARTED" = false ]; then
+            echo "Backend did not start in time";
+            exit 1
+          fi
 
       - name: Start frontend dev server
         working-directory: ./frontend
         run: |
           pnpm dev -- --host 0.0.0.0 --port 5173 &
+          FRONTEND_STARTED=false
           for i in {1..60}; do
             if curl -fsS http://127.0.0.1:5173/ > /dev/null; then
               echo "Frontend is up";
+              FRONTEND_STARTED=true
               break;
             fi
             echo "Waiting for frontend...";
             sleep 1;
           done
-          echo "Frontend did not start in time";
-          exit 1
+          if [ "$FRONTEND_STARTED" = false ]; then
+            echo "Frontend did not start in time";
+            exit 1
+          fi
 
       - name: Install e2e dependencies
         working-directory: ./e2e
